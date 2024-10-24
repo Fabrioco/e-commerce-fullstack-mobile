@@ -1,9 +1,13 @@
-import { View, Text } from "react-native";
+import { ScrollView } from "react-native";
+import { Text } from "react-native";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+
+const statusBarHeight = getStatusBarHeight();
 
 export default function Cart() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", }} className="bg-white">
+    <ScrollView className="" style={{paddingTop: statusBarHeight}}>
       <Text>carrinho</Text>
-    </View>
+    </ScrollView>
   );
 }

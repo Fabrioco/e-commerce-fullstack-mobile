@@ -1,8 +1,10 @@
 import React from "react";
 import { View, Text, Image, TextInput, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import Header from "./components/Header";
 import { TouchableOpacity } from "react-native";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+
+const statusBarHeight = getStatusBarHeight();
 
 export default function Home() {
   const [searchInput, setSearchInput] = React.useState<string>("");
@@ -10,9 +12,9 @@ export default function Home() {
     <ScrollView
       showsVerticalScrollIndicator={false}
       className="flex-1 bg-[#074740] "
+      style={{ paddingTop: statusBarHeight }}
     >
       <View className="text-[#074740] flex flex-col items-center justify-center">
-        <Header />
         <View className="flex w-10/12 flex-row justify-between items-center my-2 ">
           <View className="flex flex-col gap-3">
             <Text className="text-xl color-slate-400">Bem vindo de volta!</Text>
