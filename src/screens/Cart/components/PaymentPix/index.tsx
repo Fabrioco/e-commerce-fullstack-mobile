@@ -1,9 +1,11 @@
+import { useStep } from "@/src/contexts/StepContext";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 
-const QRCodePix = () => {
+const PaymentPix = () => {
+  const { setStep } = useStep();
   const chave = "11960168159";
   const nome = "Fabrício Oliveira Lopes";
   const cidade = "SAO PAULO";
@@ -12,7 +14,10 @@ const QRCodePix = () => {
   const payloadPix = generatePixPayload(chave, nome, cidade, valor);
 
   return (
-    <View className="w-full flex flex-col items-center justify-center gap-4 bg-white">
+    <View className="flex-1 w-full flex flex-col items-center justify-center gap-4 bg-white relative">
+      <TouchableOpacity onPress={() => setStep(1)} className="bg-[#074740] rounded-md absolute top-10 right-10">
+        <Text className="text-3xl text-white px-4 py-2">Voltar</Text>
+      </TouchableOpacity>
       <Text className="text-3xl">QR CODE Para Pagamento</Text>
       <QRCode value={payloadPix} size={200} />
       <Text className="text-3xl">PIX Copia e Cola</Text>
@@ -37,4 +42,4 @@ function generatePixPayload(
   return payload;
 }
 
-export default QRCodePix;
+export default PaymentPix;

@@ -11,10 +11,10 @@ export default function Home() {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      className="flex-1 bg-[#074740] "
+      className="flex-1 bg-[#074740]"
       style={{ paddingTop: statusBarHeight }}
     >
-      <View className="text-[#074740] flex flex-col items-center justify-center">
+      <View className="text-[#074740] flex flex-col items-center justify-center pb-12">
         <View className="flex w-10/12 flex-row justify-between items-center my-2 ">
           <View className="flex flex-col gap-3">
             <Text className="text-xl color-gray-400">Bem vindo de volta!</Text>
@@ -68,7 +68,7 @@ export default function Home() {
           </TouchableOpacity>
         </View>
 
-        <View className="w-11/12 flex flex-row flex-wrap justify-between mt-4 mb-4 gap-8">
+        <View className="w-11/12 flex flex-row flex-wrap justify-between mt-4 gap-8">
           <View className="w-5/12  flex flex-col items-center justify-center">
             <Image
               source={require("../../assets/images/bolsa.png")}

@@ -6,6 +6,7 @@ import {
   CardFieldInput,
 } from "@stripe/stripe-react-native";
 import axios from "axios";
+import { useStep } from "@/src/contexts/StepContext";
 
 const PaymentCard = () => {
   const { confirmPayment } = useStripe();
@@ -16,6 +17,8 @@ const PaymentCard = () => {
   const [paymentSuccess, setPaymentSuccess] = useState("");
 
   const value = 1000;
+
+  const { setStep } = useStep()
 
   const handlePayment = async () => {
     if (!cardDetails?.complete) {
@@ -54,33 +57,38 @@ const PaymentCard = () => {
   };
 
   return (
-    <View className="w-11/12 p-4 rounded-lg flex flex-col items-center justify-center bg-white">
-      <CardField
-        postalCodeEnabled={false}
-        onCardChange={(details) => {
-          setCardDetails(details);
-        }}
-        style={{
-          width: 300,
-          height: 100,
-        }}
-      />
-
-      <TouchableOpacity
-        className="bg-[#074740] rounded-full"
-        onPress={handlePayment}
-      >
-        <Text className="text-3xl px-4 py-2 text-white uppercase">
-          Confirmar
-        </Text>
+    <View className="flex-1 w-full h-full bg-[#074740] flex items-center justify-center relative">
+      <TouchableOpacity onPress={() => setStep(1)} className="bg-white rounded-md absolute top-10 right-10">
+        <Text className="text-3xl px-4 py-2">Voltar</Text>
       </TouchableOpacity>
+      <View className="w-11/12 p-4 rounded-lg flex flex-col items-center justify-center bg-white">
+        <CardField
+          postalCodeEnabled={false}
+          onCardChange={(details) => {
+            setCardDetails(details);
+          }}
+          style={{
+            width: 300,
+            height: 100,
+          }}
+        />
 
-      {paymentError ? (
-        <Text className="text-2xl text-red-600 mt-4">{paymentError}</Text>
-      ) : null}
-      {paymentSuccess ? (
-        <Text className="text-2xl text-green-600 mt-4">{paymentSuccess}</Text>
-      ) : null}
+        <TouchableOpacity
+          className="bg-[#074740] rounded-full"
+          onPress={handlePayment}
+        >
+          <Text className="text-3xl px-4 py-2 text-white uppercase">
+            Confirmar
+          </Text>
+        </TouchableOpacity>
+
+        {paymentError ? (
+          <Text className="text-2xl text-red-600 mt-4">{paymentError}</Text>
+        ) : null}
+        {paymentSuccess ? (
+          <Text className="text-2xl text-green-600 mt-4">{paymentSuccess}</Text>
+        ) : null}
+      </View>
     </View>
   );
 };
