@@ -4,6 +4,7 @@
     "slug": "e-commerce",
     "version": "1.0.0",
     "orientation": "portrait",
+    "entryPoint": "./src/App/_layout.tsx",
     "icon": "./assets/images/icon.png",
 
     "scheme": "myapp",

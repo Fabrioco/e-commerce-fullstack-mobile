@@ -15,7 +15,7 @@ const PaymentCard = () => {
   const [paymentError, setPaymentError] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState("");
 
-  const value = 1000; // Valor do pagamento em centavos (ex: R$ 10,00)
+  const value = 1000;
 
   const handlePayment = async () => {
     if (!cardDetails?.complete) {
@@ -84,19 +84,5 @@ const PaymentCard = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-    height: 100,
-  },
-  cardField: {
-    width: "100%",
-    height: 100,
-    marginVertical: 30,
-  },
-});
 
 export default PaymentCard;

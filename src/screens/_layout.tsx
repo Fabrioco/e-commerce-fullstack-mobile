@@ -3,9 +3,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
-import Home from "./Home";
-import OtherPage from "./Cart";
-import Informations from "./Informations";
+import Home from "./Home/Home";
+import OtherPage from "./Cart/Cart";
+import Informations from "./Informations/Informations";
 
 export default function RootLayout() {
   const Tab = createBottomTabNavigator();
