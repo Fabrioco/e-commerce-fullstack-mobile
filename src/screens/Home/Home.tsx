@@ -3,11 +3,60 @@ import { View, Text, Image, TextInput, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { TouchableOpacity } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { products } from "@/src/data/products";
+import { ImageSourcePropType } from "react-native";
 
 const statusBarHeight = getStatusBarHeight();
 
+interface ListProducts {
+  id: number;
+  name: string;
+  categoria: string;
+  price: number;
+  image: ImageSourcePropType;
+  offer?: boolean;
+  offerPrice?: number;
+  popular?: boolean;
+}
+
+const categories = ["Todos", "Tênis", "Sapatos", "Vestidos", "Bolsas"];
+
 export default function Home() {
   const [searchInput, setSearchInput] = React.useState<string>("");
+  const [listProducts, setListProducts] =
+    React.useState<ListProducts[]>(products);
+  const [activeIndex, setActiveIndex] = React.useState<number>(0);
+
+  const buttonsRefCategories = React.useRef<(TouchableOpacity | null)[]>([]);
+
+  const saveCart = async () => {};
+
+  const showCategory = (tag: string, index: number) => {
+    setActiveIndex(index);
+    switch (tag) {
+      case "Todos":
+        setListProducts(products);
+        break;
+      case "Tênis":
+        setListProducts(products.filter((item) => item.categoria === "Tenis"));
+        break;
+      case "Sapatos":
+        setListProducts(
+          products.filter((item) => item.categoria === "Sapatos")
+        );
+        break;
+      case "Vestidos":
+        setListProducts(
+          products.filter((item) => item.categoria === "Vestidos")
+        );
+        break;
+      case "Bolsas":
+        setListProducts(products.filter((item) => item.categoria === "Bolsas"));
+        break;
+    }
+  };
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -51,151 +100,64 @@ export default function Home() {
         </View>
 
         <View className="flex flex-row my-8 justify-between items-center w-11/12 ">
-          <TouchableOpacity className="px-4 py-2 bg-white rounded-xl ">
-            <Text>Todos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="px-4 py-2 bg-gray-300 rounded-xl ">
-            <Text>Tênis</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="px-4 py-2 bg-gray-300 rounded-xl">
-            <Text>Sapatos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="px-4 py-2 bg-gray-300 rounded-xl">
-            <Text>Vestidos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="px-4 py-2 bg-gray-300 rounded-xl">
-            <Text>Bolsas</Text>
-          </TouchableOpacity>
+          {categories.map((tag, index) => (
+            <TouchableOpacity
+              key={tag}
+              className={`px-4 py-2 rounded-xl ${
+                activeIndex === index ? "bg-white" : "bg-gray-300"
+              }`}
+              onPress={() => showCategory(tag, index)}
+              ref={(ref) => (buttonsRefCategories.current[index] = ref)}
+            >
+              <Text>{tag}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
         <View className="w-11/12 flex flex-row flex-wrap justify-between mt-4 gap-8">
-          <View className="w-5/12  flex flex-col items-center justify-center">
-            <Image
-              source={require("../../assets/images/bolsa.png")}
-              className="w-40 h-40 bg-gray-300 rounded-lg"
-            />
-            <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
-              <Text>
-                <Icon name="shopping-bag" size={25} />
-              </Text>
-            </TouchableOpacity>
-            <View className="mt-4">
-              <Text className="text-white">Produto 1</Text>
-              <Text className="text-white font-bold text-2xl">Preço</Text>
+          {listProducts.map((prod) => (
+            <View
+              key={prod.id}
+              className="w-5/12  flex flex-col items-center justify-center relative"
+            >
+              <Image
+                source={prod.image}
+                className="w-40 h-40 bg-gray-300 rounded-lg"
+              />
+              {prod.popular && (
+                <Text className="text-xl absolute top-[-5] left-[-10] px-2 py-1 bg-white  rounded-md text-black uppercase">
+                  Popular
+                </Text>
+              )}
+              {prod.offer && (
+                <Text className="text-xl absolute top-10 left-[-10] px-2 py-1 bg-white  rounded-md text-black uppercase">
+                  Novo
+                </Text>
+              )}
+              <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
+                <Text>
+                  <Icon name="shopping-bag" size={25} />
+                </Text>
+              </TouchableOpacity>
+              <View className="mt-4">
+                <Text className="text-white">{prod.name}</Text>
+                {prod.offer ? (
+                  <View className="flex flex-row gap-2">
+                    <Text className="text-white font-normal text-2xl line-through">
+                      R$ {prod.price}
+                    </Text>
+                    <Text className="text-white font-bold text-2xl">
+                      R$ {prod.offerPrice}
+                    </Text>
+                  </View>
+                ) : (
+                  <Text className="text-white font-bold text-2xl">
+                    R$ {prod.price}
+                  </Text>
+                )}
+              </View>
             </View>
-          </View>
-
-          <View className="w-5/12  flex flex-col items-center justify-center">
-            <Image
-              source={require("../../assets/images/bolsa.png")}
-              className="w-40 h-40 bg-gray-300 rounded-lg"
-            />
-            <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
-              <Text>
-                <Icon name="shopping-bag" size={25} />
-              </Text>
-            </TouchableOpacity>
-            <View className="mt-4">
-              <Text className="text-white">Produto 1</Text>
-              <Text className="text-white font-bold text-2xl">Preço</Text>
-            </View>
-          </View>
-
-          <View className="w-5/12  flex flex-col items-center justify-center">
-            <Image
-              source={require("../../assets/images/bolsa.png")}
-              className="w-40 h-40 bg-gray-300 rounded-lg"
-            />
-            <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
-              <Text>
-                <Icon name="shopping-bag" size={25} />
-              </Text>
-            </TouchableOpacity>
-            <View className="mt-4">
-              <Text className="text-white">Produto 1</Text>
-              <Text className="text-white font-bold text-2xl">Preço</Text>
-            </View>
-          </View>
-
-          <View className="w-5/12  flex flex-col items-center justify-center">
-            <Image
-              source={require("../../assets/images/bolsa.png")}
-              className="w-40 h-40 bg-gray-300 rounded-lg"
-            />
-            <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
-              <Text>
-                <Icon name="shopping-bag" size={25} />
-              </Text>
-            </TouchableOpacity>
-            <View className="mt-4">
-              <Text className="text-white">Produto 1</Text>
-              <Text className="text-white font-bold text-2xl">Preço</Text>
-            </View>
-          </View>
-
-          <View className="w-5/12  flex flex-col items-center justify-center">
-            <Image
-              source={require("../../assets/images/bolsa.png")}
-              className="w-40 h-40 bg-gray-300 rounded-lg"
-            />
-            <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
-              <Text>
-                <Icon name="shopping-bag" size={25} />
-              </Text>
-            </TouchableOpacity>
-            <View className="mt-4">
-              <Text className="text-white">Produto 1</Text>
-              <Text className="text-white font-bold text-2xl">Preço</Text>
-            </View>
-          </View>
-
-          <View className="w-5/12  flex flex-col items-center justify-center">
-            <Image
-              source={require("../../assets/images/bolsa.png")}
-              className="w-40 h-40 bg-gray-300 rounded-lg"
-            />
-            <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
-              <Text>
-                <Icon name="shopping-bag" size={25} />
-              </Text>
-            </TouchableOpacity>
-            <View className="mt-4">
-              <Text className="text-white">Produto 1</Text>
-              <Text className="text-white font-bold text-2xl">Preço</Text>
-            </View>
-          </View>
-
-          <View className="w-5/12  flex flex-col items-center justify-center">
-            <Image
-              source={require("../../assets/images/bolsa.png")}
-              className="w-40 h-40 bg-gray-300 rounded-lg"
-            />
-            <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
-              <Text>
-                <Icon name="shopping-bag" size={25} />
-              </Text>
-            </TouchableOpacity>
-            <View className="mt-4">
-              <Text className="text-white">Produto 1</Text>
-              <Text className="text-white font-bold text-2xl">Preço</Text>
-            </View>
-          </View>
-
-          <View className="w-5/12  flex flex-col items-center justify-center">
-            <Image
-              source={require("../../assets/images/bolsa.png")}
-              className="w-40 h-40 bg-gray-300 rounded-lg"
-            />
-            <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
-              <Text>
-                <Icon name="shopping-bag" size={25} />
-              </Text>
-            </TouchableOpacity>
-            <View className="mt-4">
-              <Text className="text-white">Produto 1</Text>
-              <Text className="text-white font-bold text-2xl">Preço</Text>
-            </View>
-          </View>
+          ))}
         </View>
       </View>
     </ScrollView>
