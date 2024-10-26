@@ -22,6 +22,14 @@ export default function Home() {
 
   const buttonsRefCategories = React.useRef<(TouchableOpacity | null)[]>([]);
 
+  const searchProduct = () => {
+    const text = searchInput.trim();
+    const results = products.filter((prod) =>
+      prod.name.toLowerCase().includes(text.toLowerCase())
+    );
+    setListProducts(results);
+  };
+
   const saveCart = async (
     id: number,
     product: string,
@@ -46,6 +54,7 @@ export default function Home() {
     switch (tag) {
       case "Todos":
         setListProducts(products);
+        setSearchInput("");
         break;
       case "Tênis":
         setListProducts(products.filter((item) => item.categoria === "Tenis"));
@@ -83,12 +92,18 @@ export default function Home() {
           </View>
         </View>
         <View className="w-11/12 flex flex-row h-14 items-center justify-center bg-gray-300  rounded-3xl gap-2">
-          <Icon name="search" size={20} color="#074740" />
+          <Icon
+            name="search"
+            size={20}
+            color="#074740"
+            onPress={searchProduct}
+          />
           <TextInput
             value={searchInput}
             placeholder="Procurar"
             onChangeText={setSearchInput}
             className="w-10/12 text-xl"
+            onSubmitEditing={searchProduct}
           />
         </View>
 
