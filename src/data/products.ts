@@ -4,7 +4,7 @@ export const products = [
     name: "Sapato Vermelho",
     categoria: "Sapatos",
     price: 100,
-    image: require('../assets/images/sapato.png'),
+    image: require("../assets/images/sapato.png"),
     offer: true,
     offerPrice: 50,
     popular: true,
@@ -12,7 +12,7 @@ export const products = [
   {
     id: 1,
     name: "Tênis Branco Com Rosa",
-    categoria: 'Tenis',
+    categoria: "Tenis",
     price: 150,
     image: require("../assets/images/tenis.png"),
     new: true,
@@ -62,7 +62,7 @@ export const products = [
   {
     id: 7,
     name: "Tênis Cinza Com Rosa",
-    categoria:  "Tenis",
+    categoria: "Tenis",
     price: 130,
     image: require("../assets/images/tenis2.png"),
     offer: true,
