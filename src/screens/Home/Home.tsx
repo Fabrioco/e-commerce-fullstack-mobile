@@ -6,31 +6,40 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { products } from "@/src/data/products";
 import { ImageSourcePropType } from "react-native";
+import { ListCartProps, useListCart } from "@/src/contexts/ListCartContext";
 
 const statusBarHeight = getStatusBarHeight();
-
-interface ListProducts {
-  id: number;
-  name: string;
-  categoria: string;
-  price: number;
-  image: ImageSourcePropType;
-  offer?: boolean;
-  offerPrice?: number;
-  popular?: boolean;
-}
 
 const categories = ["Todos", "Tênis", "Sapatos", "Vestidos", "Bolsas"];
 
 export default function Home() {
+  const { listCart, setListCart } = useListCart();
+
   const [searchInput, setSearchInput] = React.useState<string>("");
   const [listProducts, setListProducts] =
-    React.useState<ListProducts[]>(products);
+    React.useState<ListCartProps[]>(products);
   const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
   const buttonsRefCategories = React.useRef<(TouchableOpacity | null)[]>([]);
 
-  const saveCart = async () => {};
+  const saveCart = async (
+    id: number,
+    product: string,
+    price: number,
+    image: ImageSourcePropType
+  ) => {
+    const fullItem: ListCartProps = {
+      id: id,
+      name: product,
+      price: price,
+      image: image,
+    };
+    setListCart((prevList) => {
+      const cartUpdated = [...(prevList || []), fullItem];
+      AsyncStorage.setItem("cart", JSON.stringify(cartUpdated));
+      return cartUpdated;
+    });
+  };
 
   const showCategory = (tag: string, index: number) => {
     setActiveIndex(index);
@@ -134,7 +143,18 @@ export default function Home() {
                   Novo
                 </Text>
               )}
-              <TouchableOpacity className="bg-white px-2 py-2 rounded-full absolute bottom-11">
+
+              <TouchableOpacity
+                className="bg-white px-2 py-2 rounded-full absolute bottom-11"
+                onPress={() =>
+                  saveCart(
+                    prod.id,
+                    prod.name,
+                    prod.offerPrice ? prod.offerPrice : prod.price,
+                    prod.image
+                  )
+                }
+              >
                 <Text>
                   <Icon name="shopping-bag" size={25} />
                 </Text>

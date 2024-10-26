@@ -1,4 +1,6 @@
+import { useListCart } from "@/src/contexts/ListCartContext";
 import { useStep } from "@/src/contexts/StepContext";
+import { products } from "@/src/data/products";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { Image, Text, View } from "react-native";
@@ -9,7 +11,22 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 const statusBarHeight = getStatusBarHeight();
 
 export const RenderCart = () => {
-  const { setStep } = useStep()
+  const { setStep } = useStep();
+  const { listCart } = useListCart();
+  const [value, setValue] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    const calculateValues = () => {
+      const values = listCart?.map((item) => item.price);
+      const sumavalues = values?.reduce(
+        (accumulated, actualValue) => accumulated + actualValue,
+        0
+      );
+      if (sumavalues) setValue(sumavalues);
+    };
+    calculateValues();
+  }, []);
+
   return (
     <ScrollView
       className="flex-1 bg-[#074740]"
@@ -20,28 +37,25 @@ export const RenderCart = () => {
         <Text className="text-4xl h-10 w-full text-white font-bold text-center border-b-white border-b ">
           CARRINHO
         </Text>
-        <View className="w-full flex flex-col items-center gap-10 mt-10">
-          {[1, 2, 3, 4].map((index) => (
-            <View
-              key={index}
-              className="w-11/12 h-60 flex flex-row items-center justify-around bg-slate-200 rounded-lg"
-            >
-              <Image
-                source={require("../../../../assets/images/bolsa.png")}
-                className="w-60 h-60"
-              />
+        {listCart?.map((item) => (
+          <View
+            key={item.id}
+            className="w-full flex flex-col items-center gap-10 mt-10"
+          >
+            <View className="w-11/12 h-60 flex flex-row items-center justify-around bg-slate-200 rounded-lg">
+              <Image source={item.image} className="w-60 h-60" />
               <View className="h-1/2 flex justify-between items-center">
-                <Text className="text-2xl">Produto {index + 1}</Text>
-                <Text className="text-3xl font-bold">Preço</Text>
+                <Text className="text-2xl w-9/12">{item.name}</Text>
+                <Text className="text-3xl font-bold">R$ {item.price}</Text>
               </View>
             </View>
-          ))}
-        </View>
+          </View>
+        ))}
 
         <View className="bg-white flex flex-col justify-between w-11/12 h-40 mt-10 rounded-md p-4">
           <View className="flex flex-row justify-between items-center border-b">
             <Text className="text-2xl">SubTotal</Text>
-            <Text className="text-3xl">R$ 100</Text>
+            <Text className="text-3xl">R$ {value}</Text>
           </View>
           <View className="flex flex-row justify-between items-center border-b">
             <Text className="text-2xl">Frete</Text>
@@ -49,7 +63,7 @@ export const RenderCart = () => {
           </View>
           <View className="flex flex-row justify-between items-center border-b">
             <Text className="text-2xl">Total</Text>
-            <Text className="text-3xl">R$ 110</Text>
+            <Text className="text-3xl">R$ {value ? value + 10 : 0}</Text>
           </View>
         </View>
 
