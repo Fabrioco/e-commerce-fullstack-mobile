@@ -12,8 +12,7 @@ const statusBarHeight = getStatusBarHeight();
 
 export const RenderCart = () => {
   const { setStep } = useStep();
-  const { listCart } = useListCart();
-  const [value, setValue] = React.useState<number | null>(null);
+  const { listCart, shipping, setValue, value,  } = useListCart();
 
   React.useEffect(() => {
     const calculateValues = () => {
@@ -25,7 +24,7 @@ export const RenderCart = () => {
       if (sumavalues) setValue(sumavalues);
     };
     calculateValues();
-  }, []);
+  }, [listCart]);
 
   return (
     <ScrollView
@@ -63,18 +62,32 @@ export const RenderCart = () => {
           </View>
           <View className="flex flex-row justify-between items-center border-b">
             <Text className="text-2xl">Total</Text>
-            <Text className="text-3xl">R$ {value ? value + 10 : 0}</Text>
+            <Text className="text-3xl">
+              R$ {value == null ? 0 + shipping : value + shipping}
+            </Text>
           </View>
         </View>
 
-        <TouchableOpacity
-          className="mb-14 mt-8 bg-white flex items-center justify-center w-11/12 rounded-2xl"
-          onPress={() => setStep(1)}
-        >
-          <Text className="text-[#074740] px-4 py-8 text-5xl">
-            Finalizar Compra <Icon name="arrow-right" size={30} />
-          </Text>
-        </TouchableOpacity>
+        {value === 0 ? (
+          <TouchableOpacity
+            className="mb-14 mt-8 bg-white flex items-center justify-center w-11/12 rounded-2xl"
+            onPress={() => setStep(1)}
+            disabled
+          >
+            <Text className="text-[#074740] px-4 py-8 text-5xl">
+              Finalizar Compra <Icon name="arrow-right" size={30} />
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            className="mb-14 mt-8 bg-white flex items-center justify-center w-11/12 rounded-2xl"
+            onPress={() => setStep(1)}
+          >
+            <Text className="text-[#074740] px-4 py-8 text-5xl">
+              Finalizar Compra <Icon name="arrow-right" size={30} />
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );

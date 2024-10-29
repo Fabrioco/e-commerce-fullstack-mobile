@@ -16,7 +16,13 @@ export interface ListCartProps {
 interface ListCartInterface {
   listCart: ListCartProps[] | null;
   setListCart: React.Dispatch<SetStateAction<ListCartProps[] | null>>;
+
+  shipping: number;
+
+  value: number;
+  setValue: React.Dispatch<SetStateAction<number>>;
 }
+const shipping = 10;
 
 const ListCartContext = React.createContext<ListCartInterface | undefined>(
   undefined
@@ -26,8 +32,12 @@ export const ListCartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [listCart, setListCart] = React.useState<ListCartProps[] | null>(null);
+  const [value, setValue] = React.useState<number>(0);
+
   return (
-    <ListCartContext.Provider value={{ listCart, setListCart }}>
+    <ListCartContext.Provider
+      value={{ listCart, setListCart, shipping, value, setValue }}
+    >
       {children}
     </ListCartContext.Provider>
   );

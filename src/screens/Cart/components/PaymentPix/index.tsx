@@ -1,21 +1,29 @@
+import { useListCart } from "@/src/contexts/ListCartContext";
 import { useStep } from "@/src/contexts/StepContext";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 
 const PaymentPix = () => {
   const { setStep } = useStep();
-  const chave = "11960168159";
-  const nome = "Fabrício Oliveira Lopes";
-  const cidade = "SAO PAULO";
-  const valor = "0.000001";
+  const { value, shipping } = useListCart();
 
-  const payloadPix = generatePixPayload(chave, nome, cidade, valor);
+  const [valor, setValor] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    setValor(value + shipping);
+    console.log(valor);
+  }, [value, shipping]);
+
+  const payloadPix = generatePixPayload(valor);
 
   return (
     <View className="flex-1 w-full flex flex-col items-center justify-center gap-4 bg-white relative">
-      <TouchableOpacity onPress={() => setStep(1)} className="bg-[#074740] rounded-md absolute top-10 right-10">
+      <TouchableOpacity
+        onPress={() => setStep(1)}
+        className="bg-[#074740] rounded-md absolute top-10 right-10"
+      >
         <Text className="text-3xl text-white px-4 py-2">Voltar</Text>
       </TouchableOpacity>
       <Text className="text-3xl">QR CODE Para Pagamento</Text>
@@ -32,13 +40,8 @@ const PaymentPix = () => {
   );
 };
 
-function generatePixPayload(
-  chave: string,
-  nome: string,
-  cidade: string,
-  valor: string
-) {
-  const payload = `00020101021126360014BR.GOV.BCB.PIX0114${chave}5204000053039865802BR5910${nome}6009${cidade}5405${valor}62070503***6304`;
+function generatePixPayload(valor: number) {
+  const payload = `00020101021126360014BR.GOV.BCB.PIX0114119601681595204000053039865802BR5910Fabrício Oliveira Lopes6009SAO PAULO5405${valor}62070503***6304`;
   return payload;
 }
 
